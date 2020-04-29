@@ -53,7 +53,8 @@ RUN set -eux; \
 RUN mkdir -p /vault/logs && \
     mkdir -p /vault/file && \
     mkdir -p /vault/config && \
-    chown -R vault:vault /vault
+    chgrp -R 0 /vault && \
+    chmod -R g+rwX /vault
 
 # Expose the logs directory as a volume since there's potentially long-running
 # state in there
@@ -75,6 +76,8 @@ EXPOSE 8200
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 
+# RUN
+USER 1001
 # By default you'll get a single-node development server that stores everything
 # in RAM and bootstraps itself. Don't use this configuration for production.
 CMD ["server", "-dev"]
